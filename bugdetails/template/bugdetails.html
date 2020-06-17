@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug详情</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}" media="all">
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <style type="text/css">
+        h1{
+         margin-top:100px;
+         margin-bottom:50px;
+        }
+        .container{
+         float:left;
+        }
+        .left{
+        margin-left: 220px;
+        width: 400px;
+        float: left;
+        }
+        .right{
+        margin-left: 100px;
+        width: 400px;
+        float: left;
+        }
+        .uploadimage{
+         float: right;
+        }
+        .pimg{
+           width: 400px;
+           height:400px;
+        }
+         .over {position: fixed; left:0; top:0; width:100%; z-index:100;}
+         .tempContainer {position:fixed; height:100%; width:100%; margin-right:0px; margin-left:0px; text-align:center; z-index:101;}
+
+
+
+    </style>
+</head>
+<body>
+<ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item layui-this"><a href="../buglist/1">Bug列表</a></li>
+    <li class="layui-nav-item"><a href="../bugupload/">Bug上传</a></li>
+    <li class="layui-nav-item">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">{{username}}</a>
+        <dl class="layui-nav-child">
+            <dd><a href="../logout/">退出</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<h1 align="center">Bug详情</h1>
+<div class="over"></div><!--背景层-->
+<div class="container layui-form-pane">
+    <div class="left">
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">Bug介绍</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.bugname}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">反馈时间：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.feedbacktime}}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">处理状态：</label>
+            <div class="layui-input-block">
+                {% if bugdetail.dealstate==2 %}
+                <input disabled class="layui-input" value="处理中"/>
+                {% else %}
+                {% if bugdetail.dealstate==1%}
+                <input disabled class="layui-input" value="未处理"/>
+                {% else %}
+                <input disabled class="layui-input" value="完成"/>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">处理人：</label>
+            <div class="layui-input-block">
+                 {% if bugdetail.dealpeople%}
+               <input type="text" disabled value="{{bugdetail.dealpeople}}" class="layui-input">
+                {% else %}
+                <input disabled class="layui-input" value="未指定"/>
+                {% endif %}
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text  ">
+            <label class="layui-form-label label">处理办法：</label>
+            <div class="layui-input-block">
+                <textarea name="desc" class="layui-textarea">{% if bugdetail.dealmethod %}{{bugdetail.dealmethod}}{% else %}暂无{% endif %}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label labweight">Bug图片</label>
+            <button type="button " class="layui-btn uploadimage" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+        {% for path in upload_path %}
+        <div class="logoImg amplifyImg"><!--注意：此处的amlifyImg不可少-->
+            <img class="pimg" src="{{path}}"><!-- 此处是引入图片的路径 -->
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="right">
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">系统版本：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.systemversion}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">反馈人：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.feedbackpeople}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">产品版本：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.productsystem}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">系统型号：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.systemmodel}}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item  ">
+            <label class="layui-form-label">客户端：</label>
+            <div class="layui-input-block">
+                <input type="text" disabled value="{{bugdetail.bugsystem}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text  ">
+            <label class="layui-form-label label">bug详情：</label>
+            <div class="layui-input-block">
+                <textarea name="desc" class="layui-textarea">{{bugdetail.bugdetail}}</textarea>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    layui.use('form', function(){
+  var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+});
+
+
+
+
+</script>
+
+<script>
+layui.use('upload', function(){
+  var upload = layui.upload;
+
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test1' //绑定元素
+    ,url: '../bugdetails/loadimage/{{bugdetail.bug_id}}' //上传接口
+    ,done: function(res){
+      alert(res.msg)
+    }
+    ,error: function(){
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script>
+             $(document).ready(function () {
+                 var imgsObj = $('.amplifyImg img');//需要放大的图像
+                 if(imgsObj){
+                     $.each(imgsObj,function(){
+                         $(this).click(function(){
+                             var currImg = $(this);
+                             coverLayer(1);
+                             var tempContainer = $('<div class=tempContainer></div>');//图片容器
+                             with(tempContainer){//width方法等同于$(this)
+                                 appendTo("body");
+                                 var windowWidth=$(window).width();
+                                 var windowHeight=$(window).height();
+                                 //获取图片原始宽度、高度
+                                 var orignImg = new Image();
+                                 orignImg.src =currImg.attr("src") ;
+                                 var currImgWidth= orignImg.width;
+                                 var currImgHeight = orignImg.height;
+                                 if(currImgWidth<windowWidth){//为了让图片不失真，当图片宽度较小的时候，保留原图
+                                     if(currImgHeight<windowHeight){
+                                         var topHeight=(windowHeight-currImgHeight)/2;
+                                         if(topHeight>35){/*此处为了使图片高度上居中显示在整个手机屏幕中：因为在android,ios的微信中会有一个title导航，35为title导航的高度*/
+                                             topHeight=topHeight-35;
+                                             css('top',topHeight);
+                                         }else{
+                                             css('top',0);
+                                         }
+                                         html('<img border=0 src=' + currImg.attr('src') + '>');
+                                     }else{
+                                         css('top',0);
+                                         html('<img border=0 src=' + currImg.attr('src') + ' height='+windowHeight+'>');
+                                     }
+                                 }else{
+                                     var currImgChangeHeight=(currImgHeight*windowWidth)/currImgWidth;
+                                     if(currImgChangeHeight<windowHeight){
+                                         var topHeight=(windowHeight-currImgChangeHeight)/2;
+                                         if(topHeight>35){
+                                             topHeight=topHeight-35;
+                                             css('top',topHeight);
+                                         }else{
+                                             css('top',0);
+                                         }
+                                         html('<img border=0 src=' + currImg.attr('src') + ' width='+windowWidth+';>');
+                                     }else{
+                                         css('top',0);
+                                         html('<img border=0 src=' + currImg.attr('src') + ' width='+windowWidth+'; height='+windowHeight+'>');
+                                     }
+                                 }
+                             }
+                             tempContainer.click(function(){
+                                 $(this).remove();
+                                 coverLayer(0);
+                             });
+                         });
+                     });
+                 }
+                 else{
+                     return false;
+                 }
+                 //使用禁用蒙层效果
+                 function coverLayer(tag){
+                     with($('.over')){
+                         if(tag==1){
+                             css('height',$(document).height());
+                             css('display','block');
+                             css('opacity',1);
+                             css("background-color","#FFFFFF");
+                             css("background-color","rgba(0,0,0,0.7)" );  //蒙层透明度
+                         }
+                         else{
+                             css('display','none');
+                         }
+                     }
+                 }
+             });
+
+
+
+</script>
+</body>
+</html>

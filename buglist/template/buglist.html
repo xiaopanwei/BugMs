@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug列表</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}" media="all">
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+
+    <style type="text/css">
+        h1{
+         margin-top:100px;
+        }
+        .table-container{
+        max-width:1200px;
+         margin:auto;
+         margin-top:50px;}
+         a{
+         color:#01AAED;
+         margin-left:10px;
+         }
+        .td-length {
+        max-width:150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; //文本不换行，这样超出一行的部分被截取，显示...
+        }
+        .min_60{
+        min-width:60px;
+        }
+        .min_100{
+        min-width:120px;
+        }
+        .min_30{
+        min-width:30px;
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+<ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item layui-this"><a href="../buglist/1">Bug列表</a></li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">Bug上传</a>
+        <dl class="layui-nav-child"> <!-- 二级菜单 -->
+            <dd><a href="../bugupload/">连续上传</a></dd>
+            <dd><a href="../bugupload/once">上传</a></dd>
+        </dl>
+    </li>
+     <li class="layui-nav-item"><a href="../bugsearch/0">搜索</a></li>
+    <li class="layui-nav-item">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">{{username}}</a>
+        <dl class="layui-nav-child">
+            <dd><a href="../logout/">退出</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<h1 align="center">Bug列表</h1>
+
+<div class="table-container">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="min_30">序号</th>
+            <th>Bugid</th>
+            <th class="td-length">Bug介绍</th>
+            <th class="min_60">所属产品</th>
+            <th class="td-length">解决办法</th>
+            <th class="min_100">反馈时间</th>
+            <th class="min_60">处理状态</th>
+            <th>客户端类型</th>
+            <th>操作</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        {% for bug in buglist %}
+        <tr>
+            <td>{{(page-1)*10+buglist.index(bug)+1}}</td>
+            <td>{{bug.bug_id}}</td>
+            <td class="td-length">{{bug.bugname}}</td>
+            <td>{{bug.product}}</td>
+            {% if bug.dealmethod%}
+            <td class="td-length">{{bug.dealmethod}}</td>
+            {% else %}
+            <td>暂无</td>
+            {% endif %}
+            <td>{{bug.feedbacktime}}</td>
+
+            {% if bug.dealstate==2 %}
+            <td>处理中</td>
+            {% else %}
+            {% if bug.dealstate==1%}
+            <td>未处理</td>
+            {% else %}
+            <td>完成</td>
+            {% endif %}
+            {% endif %}
+
+            {% if bug.bugsystem%}
+            <td>{{bug.bugsystem}}</td>
+            {% else %}
+            <td>暂无</td>
+            {% endif %}
+            <td><a href="/bugdetails/{{bug.bug_id}}">详情</a>
+                <a href="/bugadminister/{{bug.bug_id}}">Bug管理</a>
+                <a href="/buglist/confirm/{{bug.bug_id}}/{{page}}">确认</a>
+                <a href="/buglist/close/{{bug.bug_id}}/{{page}}">关闭</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+    <a href="../bugupload/once" class="layui-btn layui-btn-sm">
+        <i class="layui-icon">&#xe654;</i>
+    </a>
+</div>
+<div align="center" id="navtable"></div>
+<script>
+                 layui.use('laypage', function(){
+                  var laypage = layui.laypage;
+
+           //执行一个laypage实例
+           laypage.render({
+             elem: 'navtable' //注意，这里的 navtable 是 ID，不用加 # 号
+             ,count: {{ count }} //数据总数，从服务端得到
+             ,limit: {{ pageSize }}
+             ,layout: ['count', 'prev', 'page', 'next', 'refresh', 'skip']
+             ,curr: {{ page }}
+             ,jump: function (obj,fist){
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log(obj.limit); //得到每页显示的条数
+                //首次不执行
+                if(!fist){
+                window.location.href = "/buglist/"+obj.curr;
+                }
+              }
+           });
+         });
+
+
+
+
+</script>
+
+<script>
+//注意：导航 依赖 element 模块，否则无法进行功能性操作
+layui.use('element', function(){
+  var element = layui.element;
+
+  //…
+});
+
+
+
+</script>
+</body>
+
+</html>

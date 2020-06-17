@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug上传</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui/css/layui.css') }}" media="all">
+    <script src="{{ url_for('static', filename='layui/layui.js') }}"></script>
+    <style type="text/css">
+        h1{
+         margin-top:100px;
+         margin-bottom:50px;
+        }
+        form{
+         width:500px;
+         margin:auto;
+        }
+        .container{
+         width:500px;
+         margin:auto;
+        }
+        .btn{
+        width:120px;
+         margin-bottom:20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<ul class="layui-nav" lay-filter="">
+    <li class="layui-nav-item "><a href="../buglist/1">Bug列表</a></li>
+    <li class="layui-nav-item layui-this"><a href="">Bug上传</a></li>
+    <li class="layui-nav-item">
+        <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">{{username}}</a>
+        <dl class="layui-nav-child">
+            <dd><a href="../logout/">退出</a></dd>
+        </dl>
+    </li>
+</ul>
+
+<h1 align="center">Bug上传</h1>
+<div class="container">
+<a  href="/buglist/1">
+    <div class="layui-btn layui-btn-radius layui-btn-primary btn">返回</div>
+</a>
+<form class="layui-form layui-form-pane" method="post" action="/bugupload/upload/{{once}}">
+    <input type="hidden" name="feedbackpeople" value="{{username}}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">Bug介绍</label>
+        <div class="layui-input-block">
+            <input type="text" name="introduce" required lay-verify="required" placeholder="请输入Bug描述" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属产品</label>
+        <div class="layui-input-block">
+            <input type="text" name="product" required lay-verify="required" placeholder="请输入Bug所属产品" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">客户端类型</label>
+        <div class="layui-input-block">
+            <select name="system">
+                <option value="">请选择客户端类型</option>
+                <option value="PC">PC</option>
+                <option value="Android">Android</option>
+                <option value="IOS">IOS</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品版本</label>
+        <div class="layui-input-block">
+            <input type="text" name="productversion" required lay-verify="required" placeholder="请输入产品版本号，例如：5.4.1"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">系统版本</label>
+        <div class="layui-input-block">
+            <input type="text" name="systemversion" required lay-verify="required"
+                   placeholder="系统版本，例如：win7 Android 10.0 IOS 13.3" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">系统型号</label>
+        <div class="layui-input-block">
+            <input type="text" name="systemmodel" required lay-verify="required" placeholder="请输入系统型号,例如：华为 苹果8 联想"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">Bug详情</label>
+        <div class="layui-input-block">
+            <textarea name="details" required placeholder="请输入复现步骤或详细的bug介绍" autocomplete="off"
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</form>
+</div>
+</body>
+
+<script>
+    layui.use('form', function(){
+  var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+});
+
+
+</script>
+
+<script>
+layui.use('upload', function(){
+  var upload = layui.upload;
+
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#test1' //绑定元素
+    ,url: '../bugupload/loadimage' //上传接口
+    ,done: function(res){
+      alert(res.msg)
+    }
+    ,error: function(){
+      alert(res.msg)
+    }
+  });
+});
+</script>
+</html>
