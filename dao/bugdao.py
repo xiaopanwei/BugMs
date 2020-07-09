@@ -3,7 +3,7 @@ import time
 
 from db import get_connection
 from modal import bugInfo
-
+from modal import imageInfo
 
 def find_all(page, pageSize):
     conn = get_connection()
@@ -173,7 +173,7 @@ def find_pwd_by_name(name):
 def findcountimagebybugid(bugid):
     conn = get_connection()
     cursor = conn.cursor()
-    sql = "SELECT count(*) FROM bugimage WHERE bugid=%s"
+    sql = "SELECT count(*) FROM bugimage WHERE bugid=%s and flag=0"
     try:
         cursor.execute(sql, (bugid))
         for c in cursor:
@@ -186,7 +186,7 @@ def findcountimagebybugid(bugid):
 def findimagebybugid(bugid):
     conn = get_connection()
     cursor = conn.cursor()
-    sql = "select * from bugimage WHERE bugid=%s"
+    sql = "select * from bugimage WHERE bugid=%s and flag=0"
     try:
         cursor.execute(sql, bugid)
 
@@ -194,7 +194,10 @@ def findimagebybugid(bugid):
         if conn == "":
             return imageurl
         for i in cursor:
-            imageurl.append( i["imageurl"])
+            image= imageInfo()
+            image.image_id=i["id"]
+            image.image_url=i["imageurl"]
+            imageurl.append( image)
     finally:
         conn.close()
     return imageurl

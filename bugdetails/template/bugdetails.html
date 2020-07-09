@@ -28,13 +28,11 @@
          float: right;
         }
         .pimg{
-           width: 400px;
-           height:400px;
+           width: 150px;
+           height:150px;
         }
          .over {position: fixed; left:0; top:0; width:100%; z-index:100;}
          .tempContainer {position:fixed; height:100%; width:100%; margin-right:0px; margin-left:0px; text-align:center; z-index:101;}
-
-
 
     </style>
 </head>
@@ -84,8 +82,8 @@
         <div class="layui-form-item  ">
             <label class="layui-form-label">处理人：</label>
             <div class="layui-input-block">
-                 {% if bugdetail.dealpeople%}
-               <input type="text" disabled value="{{bugdetail.dealpeople}}" class="layui-input">
+                {% if bugdetail.dealpeople%}
+                <input type="text" disabled value="{{bugdetail.dealpeople}}" class="layui-input">
                 {% else %}
                 <input disabled class="layui-input" value="未指定"/>
                 {% endif %}
@@ -103,11 +101,13 @@
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
         </div>
-        {% for path in upload_path %}
-        <div class="logoImg amplifyImg"><!--注意：此处的amlifyImg不可少-->
-            <img class="pimg" src="{{path}}"><!-- 此处是引入图片的路径 -->
+        <div id="layer-photos-demo" class="layer-photos-demo">
+            {% for path in upload_path %}
+            <!--<div class="logoImg amplifyImg">&lt;!&ndash;注意：此处的amlifyImg不可少&ndash;&gt;-->
+            <img class="pimg" layer-pid layer-src="{{path.image_url}}" src="{{path.image_url}}"><!-- 此处是引入图片的路径 -->
+            <!--</div>-->
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
     <div class="right">
@@ -153,15 +153,24 @@
 </div>
 
 <script>
+
     layui.use('form', function(){
   var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
 });
+</script>
 
-
+<script>
+layui.use('layer', function(){
+  var layer = layui.layer;
+    //调用示例
+layer.photos({
+  photos: '#layer-photos-demo'
+  ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+});
+});
 
 
 </script>
-
 <script>
 layui.use('upload', function(){
   var upload = layui.upload;
@@ -177,6 +186,11 @@ layui.use('upload', function(){
     }
   });
 });
+
+
+
+
+
 
 
 
@@ -265,7 +279,6 @@ layui.use('upload', function(){
                      }
                  }
              });
-
 
 
 </script>

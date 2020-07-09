@@ -16,3 +16,9 @@ class bugInfo:
         self.productsystem = ""
         self.systemmodel = ""
         self.flag = 0
+
+
+class imageInfo:
+    def __init__(self):
+        self.image_id =""
+        self.image_url = ""
